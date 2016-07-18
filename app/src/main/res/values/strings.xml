@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Tapdance</string>
+    <string-array name="array_difficulty">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+        <item>Insane</item>
+    </string-array>
+</resources>

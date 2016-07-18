@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.admin.btnz.SongActivity"
+    android:background="#000000">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/songName"
+        android:textSize="35dp"
+        android:text="Song Name"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/play_song"
+        android:textSize="35dp"
+        android:text="Play"
+        android:textColor="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:textOff="Easy"
+        android:textOn="Easy"
+
+        android:id="@+id/toggleButtonEasy"
+        android:layout_above="@+id/toggleButtonInsane"
+        android:layout_alignParentStart="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:id="@+id/toggleButtonMedium"
+        android:textOff="Medium"
+        android:textOn="Medium"
+        android:layout_above="@+id/toggleButtonInsane"
+        android:layout_centerHorizontal="true"
+        android:enabled="true"
+        android:checked="true"
+        android:clickable="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:textOff="Hard"
+        android:textOn="Hard"
+        android:id="@+id/toggleButtonHard"
+        android:layout_above="@+id/toggleButtonInsane"
+        android:layout_alignEnd="@+id/toggleButtonInsane" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:textOff="Insane"
+        android:textOn="Insane"
+        android:id="@+id/toggleButtonInsane"
+        android:layout_above="@+id/play_song"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="High Score"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:id="@+id/highScoreLabelTextView"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/toggleButtonHard" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:id="@+id/highScoreTextView"
+        android:layout_below="@+id/highScoreLabelTextView"
+        android:layout_alignEnd="@+id/highScoreLabelTextView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rankTextView"
+        android:textSize="100dp"
+        android:text="U"
+        android:textColor="#FFFFFF"
+        android:layout_above="@+id/highScoreLabelTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp" />
+
+
+</RelativeLayout>
