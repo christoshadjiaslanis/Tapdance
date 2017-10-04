@@ -1,7 +1,6 @@
 
 package com.example.admin.btnz;
 
-import android.app.Activity;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 
@@ -10,7 +9,6 @@ import com.example.admin.btnz.GameComponents.Btns.HitCircle;
 import com.example.admin.btnz.GameComponents.Difficulty;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javazoom.jl.decoder.Bitstream;
@@ -21,7 +19,7 @@ import javazoom.jl.decoder.SampleBuffer;
 
 /**
  * Created by Admin on 12/7/2016.
-*/
+ */
 public class AsyncBeatMapGenerator {
 
 
@@ -40,37 +38,33 @@ public class AsyncBeatMapGenerator {
 
     public AsyncBeatMapGenerator() {
 
-
     }
 
-
     public void generateBeatMap(FileInputStream fileInputStream, DisplayMetrics displayMetrics, int durationMillis, Difficulty difficulty, ArrayList<HitCircle> beatMap, GameScreen gameScreen) throws BitstreamException {
-
 
         setDifficulty(difficulty);
 
         final GameScreen finalGameScreen = gameScreen;
 
-
-        float[] samples = new float[1024];
+        float[] samples;
         float[] spectrum = new float[FFT_SIZE / 2 + 1];
         float[] lastSpectrum = new float[FFT_SIZE / 2 + 1];
-        ArrayList<Float> spectralFlux = new ArrayList<Float>();
-        ArrayList<Float> threshold = new ArrayList<Float>();
-        ArrayList<Float> prunnedSpectralFlux = new ArrayList<Float>();
-        ArrayList<Float> peaks = new ArrayList<Float>();
+        ArrayList<Float> spectralFlux = new ArrayList<>();
+        ArrayList<Float> threshold = new ArrayList<>();
+        ArrayList<Float> prunnedSpectralFlux = new ArrayList<>();
+        ArrayList<Float> peaks = new ArrayList<>();
 
         long startTime = System.currentTimeMillis();
 
         Bitstream bitStream = new Bitstream(fileInputStream);
         javazoom.jl.decoder.Decoder decoder = new javazoom.jl.decoder.Decoder();
-        //System.out.println("Done Initiating in :" + String.valueOf(System.currentTimeMillis() - startTime));
+
         int k = 0;
         boolean noteof = true;
 
         short pcmBuffer[];
         SampleBuffer buffer;
-        ArrayList<Double> spectra = new ArrayList<Double>();
+        ArrayList<Double> spectra = new ArrayList<>();
 
 
         float z = 10.0f;
@@ -84,12 +78,10 @@ public class AsyncBeatMapGenerator {
         double theta;
 
         HitCircle hitCircle;
-        long timeInMillis = 0;
+        long timeInMillis;
 
         stopped = false;
-        //Testing
         HitCircle.setRadiusInPixels(displayMetrics);
-        //Testing
 
         Looper.prepare();
         try {
@@ -107,7 +99,6 @@ public class AsyncBeatMapGenerator {
                 while (noteof) {
                     frameHeader = bitStream.readFrame();
 
-
                     if (frameHeader != null) {
 
 
@@ -124,7 +115,6 @@ public class AsyncBeatMapGenerator {
                         float flux = 0;
                         for (int i = 0; i < spectrum.length; i++) {
                             float value = (spectrum[i] - lastSpectrum[i]);
-                            //spectraElement += (Math.log(spectrum[i]));
                             spectraElement += spectrum[i];
                             flux += value < 0 ? 0 : value;
                         }
@@ -135,9 +125,9 @@ public class AsyncBeatMapGenerator {
                         threshold.clear();
                         int threshold_n = 0;
 
-                        if(spectralFlux.size() > 1000){
+                        if (spectralFlux.size() > 1000) {
                             threshold_n = spectralFlux.size() - 999;
-                        }else{
+                        } else {
                             threshold_n = 0;
                         }
 
@@ -151,18 +141,14 @@ public class AsyncBeatMapGenerator {
                             threshold.add(mean * multiplier);
                         }
 
-                        //System.out.println("spectral--------------------");
-                        // System.out.println(threshold.size());
-                        // System.out.println(spectralFlux.size());
                         prunnedSpectralFlux.clear();
                         for (int i = 0; i < threshold.size(); i++) {
-                            if (threshold.get(i) <= spectralFlux.get( threshold_n + i))
+                            if (threshold.get(i) <= spectralFlux.get(threshold_n + i))
                                 prunnedSpectralFlux.add(spectralFlux.get(threshold_n + i) - threshold.get(i));
                             else
                                 prunnedSpectralFlux.add((float) 0);
                         }
 
-                        // System.out.println("prunned--------------------");
                         peaks.clear();
                         for (int i = 0; i < prunnedSpectralFlux.size() - 1; i++) {
 
@@ -172,7 +158,6 @@ public class AsyncBeatMapGenerator {
                             } else
                                 peaks.add((float) 0);
                         }
-                        //System.out.println("peaks--------------------");
                         if (stopped) {
                             stopped = false;
                             return;
@@ -187,14 +172,13 @@ public class AsyncBeatMapGenerator {
                                     if ((dt > minimumDivisibleTime) && (timeInMillis > 2000)) {
                                         if (Math.log(spectra.get(k - 1 - threshold_n)) > 9) {
                                             theta = generateTheta(spectra.get(k - 1));
-                                            //System.out.println(spectra.get(k - 1));
                                             prevX = generateX(dt, prevX, theta, displayMetrics.widthPixels, HitCircle.getRadiusInPixels());
                                             prevY = generateY(dt, prevY, theta, displayMetrics.heightPixels, HitCircle.getRadiusInPixels());
 
                                             a += 0.0001f;
-                                            //  System.out.println(z - a);
-                                             System.out.println("Actual: " + (System.currentTimeMillis() - startTime));
-                                             System.out.println("Processed: " + timeInMillis);
+
+                                            System.out.println("Actual: " + (System.currentTimeMillis() - startTime));
+                                            System.out.println("Processed: " + timeInMillis);
                                             System.out.println("-------------------");
                                             hitCircle = new HitCircle(timeInMillis - (System.currentTimeMillis() - startTime), 1000, prevX, prevY, z - a);
                                             hitCircle.normalise(displayMetrics);
@@ -207,9 +191,7 @@ public class AsyncBeatMapGenerator {
 
                                                 }
                                             });
-
                                             tLast = timeInMillis;
-
                                         }
 
                                     }
@@ -218,15 +200,11 @@ public class AsyncBeatMapGenerator {
                                 System.out.println(e.getMessage());
                             }
                         }
-
                         k++;
-
                     } else {
                         System.out.println("finished");
                         noteof = false;
                     }
-
-
                 }
             } catch (DecoderException e) {
                 System.out.println(e.getMessage());
@@ -234,7 +212,6 @@ public class AsyncBeatMapGenerator {
         } catch (BitstreamException e) {
             System.out.println(e.getMessage());
         }
-
         System.out.println("Total time taken:" + (System.currentTimeMillis() - startTime));
     }
 
@@ -252,10 +229,9 @@ public class AsyncBeatMapGenerator {
     //TODO replace constant in generateX with DisplayMetrics equivalent
 
     private int generateX(double dt, int prevX, double theta, int width, int radiusInPixels) {
-        int x = 0;
+        int x;
 
         double distanceMetric = SCALE * dt;
-
         distanceMetric = distanceMetric * (1 / multiplier) * 1.8;
 
         double dx = Math.cos(theta) * distanceMetric;
@@ -269,12 +245,9 @@ public class AsyncBeatMapGenerator {
     }
 
     private int generateY(double dt, int prevY, double theta, int height, int radiusInPixels) {
-        int y = 0;
+        int y;
 
         double distanceMetric = SCALE * dt;
-
-        //test
-
         distanceMetric = distanceMetric * (1 / multiplier) * 1.8;
 
         double dy = (Math.sin(theta) * distanceMetric);
@@ -289,7 +262,6 @@ public class AsyncBeatMapGenerator {
 
         double theta = spectrumMax / 100000 * 2 * Math.PI;
         theta = theta - (theta % (2 * Math.PI / SEGMENTATION_FACTOR));
-        //System.out.println(Math.log(spectrumMax));
         return theta;
 
     }
@@ -300,7 +272,6 @@ public class AsyncBeatMapGenerator {
             case INSANE: {
                 multiplier = 1.15f;
                 minimumDivisibleTime = 110;
-
                 break;
             }
             case HARD: {
@@ -322,11 +293,8 @@ public class AsyncBeatMapGenerator {
                 break;
             }
 
-
         }
 
     }
 
-
 }
-

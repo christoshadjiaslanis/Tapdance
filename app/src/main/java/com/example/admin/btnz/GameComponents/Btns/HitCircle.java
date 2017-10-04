@@ -1,12 +1,11 @@
 package com.example.admin.btnz.GameComponents.Btns;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.os.Parcelable;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewManager;
@@ -14,35 +13,27 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.os.Vibrator;
 
 import com.example.admin.btnz.GameScreen;
 import com.example.admin.btnz.R;
 
 import java.io.Serializable;
-import java.util.Random;
 
-/**
- * Created by Admin on 9/4/2016.
- */
 public class HitCircle implements Serializable {
-    Ring ring;
-    long hitTime;
-    long lifeTime;
-    ImageButton hitCircleButton;
-    int x;
-    int y;
-    static int radiusInPixels = 0;
-    float z;
-    ImageButton button;
-    public static int score;
-    Vibrator vibrator;
-    boolean hit = false;
+    private Ring ring;
+    private long hitTime;
+    private long lifeTime;
+    private int x;
+    private int y;
+    private static int radiusInPixels = 0;
+    private float z;
+    private ImageButton button;
+    private static int score;
+    private Vibrator vibrator;
+    private boolean hit = false;
     private static GameScreen gameScreen;
-    Handler handler;
-    Handler handler2;
-    Runnable r;
-    Runnable r2;
+    private Handler handler;
+    private Handler handler2;
 
     public HitCircle(long hitTime, long lifeTime, int x, int y, float z) {
 
@@ -58,52 +49,35 @@ public class HitCircle implements Serializable {
         gameScreen = gameScreenInstance;
     }
 
-    private void generatexy(DisplayMetrics dm) {
-
-        Random random = new Random();
-        this.x = (int) Math.round((dm.widthPixels - (2 * radiusInPixels)) * random.nextDouble());
-        this.y = (int) Math.round((dm.heightPixels - (2 * radiusInPixels)) * random.nextDouble());
-
-    }
-
     public static void setRadiusInPixels(DisplayMetrics displayMetrics){
 
-        radiusInPixels = (int)Math.round(displayMetrics.widthPixels * 0.16666);
+            radiusInPixels = (int)Math.round(displayMetrics.widthPixels * 0.16666);
 
     }
 
     private void setupButton(Context context) {
         setupVibrator(context);
 
-        this.ring = new Ring(R.drawable.ring, this.radiusInPixels * 2, context, this.x, this.y, z);
+        this.ring = new Ring(R.drawable.ring, radiusInPixels * 2, context, this.x, this.y, z);
         button = new ImageButton(context);
         button.setX(this.x);
         button.setY(this.y);
         button.setLayoutParams(new LinearLayout.LayoutParams(radiusInPixels, radiusInPixels));
-        // button.setBackgroundColor(this.color);
         button.setZ(z);
         button.setBackgroundResource(R.drawable.button);
         button.setSoundEffectsEnabled(false);
-
-
     }
 
     private void setupVibrator(Context context) {
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-
     }
 
     public void addToView(DisplayMetrics dm, View view, Context context) {
-
-     //   generatexy(dm);
-
         setupButton(context);
         startTimer(view);
-
     }
 
-    public void startTimer(final View view) {
-
+    private void startTimer(final View view) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,18 +87,14 @@ public class HitCircle implements Serializable {
                     ((ViewManager) ring.getRingImage().getParent()).removeView(ring.getRingImage());
                     score += 100;
                     hit = true;
-                    gameScreen.changeScore(hit);
+                    gameScreen.changeScore(true);
                     gameScreen.changeHp(hit);
-
                 }
-
-
-
             }
         });
 
         handler = new Handler();
-        r = new Runnable() {
+        Runnable r = new Runnable() {
 
 
             public void run() {
@@ -138,34 +108,26 @@ public class HitCircle implements Serializable {
                 anim.setDuration(500);
                 anim.start();
                 ring.reduceSize();
-               // button.animate().alpha(1).setDuration(500);
-
             }
         };
         handler.postDelayed(r, hitTime - lifeTime);
 
-
         handler2 = new Handler();
-        r2 = new Runnable() {
+        Runnable r2 = new Runnable() {
 
 
             public void run() {
                 if (button.getParent() != null) {
                     ((ViewManager) button.getParent()).removeView(button);
                     ((ViewManager) ring.getRingImage().getParent()).removeView(ring.getRingImage());
-                }else{
-
-
                 }
 
-                if(!hit){
+                if (!hit) {
                     gameScreen.changeScore(hit);
                     gameScreen.changeHp(hit);
                     vibrator.vibrate(75);
 
                 }
-
-
 
 
             }
@@ -176,7 +138,7 @@ public class HitCircle implements Serializable {
 
     private void addScore(View view) {
         TextView score = new TextView(view.getContext());
-        score.setText("+100");
+        score.setText("Great!");
         score.setX(this.x);
         score.setY(this.y);
         score.setTextColor(Color.WHITE);

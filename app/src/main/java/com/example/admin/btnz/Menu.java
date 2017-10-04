@@ -53,12 +53,6 @@ public class Menu extends AppCompatActivity {
 
     private ArrayList<Song> songList;
     private ListView songView;
-    private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,20 +60,11 @@ public class Menu extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         setupAppearance();
 
-
-
-
-
         getSongList();
         songView = (ListView) findViewById(R.id.song_list);
         sort();
         SongAdapter songAdt = new SongAdapter(this, songList);
         songView.setAdapter(songAdt);
-
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-
     }
 
 
@@ -133,6 +118,9 @@ public class Menu extends AppCompatActivity {
                 songList.add(new Song(thisId, thisTitle, thisArtist, thisFileName, thisDurationMillis));
             }
             while (musicCursor.moveToNext());
+        }
+        if (musicCursor != null) {
+            musicCursor.close();
         }
     }
 

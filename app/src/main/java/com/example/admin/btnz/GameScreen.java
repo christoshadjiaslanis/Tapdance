@@ -39,8 +39,6 @@ import javazoom.jl.decoder.BitstreamException;
 
 public class GameScreen extends AppCompatActivity {
 
-    HashMap<String, Object> hashMap;
-    String mapname;
     ArrayList<HitCircle> beatMap;
     MediaPlayer mPlayer;
     int score = 0;
@@ -49,7 +47,7 @@ public class GameScreen extends AppCompatActivity {
     int nHit = 0;
     int nMissed = 0;
     int hp = 100;
-    int i =0;
+    int i = 0;
 
 
     TextView scoreTextView;
@@ -80,7 +78,7 @@ public class GameScreen extends AppCompatActivity {
                             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                             getIntent().getLongExtra("songID", -1)));
 
-                    beatMap = new ArrayList<HitCircle>();
+                    beatMap = new ArrayList<>();
                     Thread.currentThread().setPriority(3);
 
                     beatMapGeneratorThread = new Thread(new Runnable() {
@@ -100,20 +98,12 @@ public class GameScreen extends AppCompatActivity {
                     beatMapGeneratorThread.start();
 
 
-                    /* BeatMapGenerator.generateBeatMap(fileInputStream, getApplicationContext().getResources().getDisplayMetrics(),
-                            getIntent().getIntExtra("songDuration", -1), (Difficulty) getIntent().getExtras().getSerializable("difficulty"));
-
-
-                    loadBeatMap();
-                    */
                     initialiseMediaPlayer(getApplicationContext(), getIntent().getLongExtra("songID", -1));
                     startMediaPlayer();
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                }// catch (BitstreamException e) {
-                //   e.printStackTrace();
-                //}
+                }
             }
         };
         h.postDelayed(r, 100);
@@ -222,11 +212,9 @@ public class GameScreen extends AppCompatActivity {
 
 
     private void setupAppearance() {
-
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.gameScreenRelativeLayout);
         relativeLayout.setBackgroundColor(Color.BLACK);
@@ -235,17 +223,14 @@ public class GameScreen extends AppCompatActivity {
         scoreTextView = (TextView) findViewById(R.id.scoreTextView);
         multiplierTextView = (TextView) findViewById(R.id.multiplierTextView);
         healthBarView = (ImageView) findViewById(R.id.healthBarImageView);
-
-
     }
 
     private void initialiseMediaPlayer(Context context, long songID) {
 
         if (songID == -1) {
-
             Toast.makeText(GameScreen.this, "No Song Sorry", Toast.LENGTH_SHORT).show();
-
         }
+
         mPlayer = new MediaPlayer();
         try {
             mPlayer.setDataSource(context, ContentUris.withAppendedId(
@@ -297,7 +282,6 @@ public class GameScreen extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Intent intent;
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_BACK:
@@ -309,8 +293,6 @@ public class GameScreen extends AppCompatActivity {
                 case KeyEvent.KEYCODE_WINDOW:
                     goToMenu();
                     break;
-
-
             }
 
         }
@@ -325,7 +307,7 @@ public class GameScreen extends AppCompatActivity {
                 mPlayer.stop();
                 mPlayer.release();
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
 
